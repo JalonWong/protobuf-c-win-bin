@@ -1,0 +1,15 @@
+on:
+  workflow_dispatch:
+name: release
+jobs:
+  excavate:
+    name: release
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@main
+    - name: submodule
+      run: git submodule update --init
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+    - name: tt
+      run: echo hello
