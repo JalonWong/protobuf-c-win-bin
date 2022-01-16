@@ -13,5 +13,5 @@ jobs:
       uses: microsoft/setup-msbuild@v1.1
       with:
         msbuild-architecture: x64
-    - name: tt
-      run: echo hello
+    - name: build1
+      run: ./src/build_protobuf.bat
