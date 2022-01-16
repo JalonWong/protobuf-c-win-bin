@@ -11,5 +11,7 @@ jobs:
       run: git submodule update --init
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
+      with:
+        msbuild-architecture: x64
     - name: tt
       run: echo hello
