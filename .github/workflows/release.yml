@@ -15,3 +15,5 @@ jobs:
         msbuild-architecture: x64
     - name: build1
       run: ./src/build_protobuf.bat
+    - name: build2
+      run: ./src/build_protobuf_c.bat
