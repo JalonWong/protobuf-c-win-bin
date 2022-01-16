@@ -1,12 +1,14 @@
 on:
-  workflow_dispatch:
+  push:
+    tags:
+    - 'v*'
 name: release
 jobs:
   excavate:
     name: release
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@main
+    - uses: actions/checkout@v2
     - name: submodule
       run: git submodule update --init
     - name: Add msbuild to PATH
@@ -21,7 +23,7 @@ jobs:
       run: 7z a protobuf-c-win64.zip .\protobuf-c\build-cmake\build\out\*
     - name: Create Release
       id: create_release
-      uses: actions/create-release@v1.4.1
+      uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
