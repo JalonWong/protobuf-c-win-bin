@@ -14,7 +14,6 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
       with:
-        vs-version: '[16,17)'
         msbuild-architecture: x64
     - name: build1
       run: ./src/build_protobuf.bat
