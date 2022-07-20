@@ -16,9 +16,9 @@ jobs:
       with:
         vs-version: '[16,17)'
         msbuild-architecture: x64
-    - name: build1
+    - name: build protobuf
       run: ./src/build_protobuf.bat
-    - name: build2
+    - name: build protobuf-c
       run: ./src/build_protobuf_c.bat
     - name: pack
       run: 7z a protobuf-c-win64.zip .\protobuf-c\build-cmake\build\out\*
