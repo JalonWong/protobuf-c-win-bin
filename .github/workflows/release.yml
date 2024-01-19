@@ -17,13 +17,7 @@ jobs:
         vs-version: '[16,17)'
         msbuild-architecture: x64
     - name: build protobuf
-      run: python ci.py build --cmake --project=protobuf
-    - name: build protobuf-c
-      run: python ci.py build --project=protobuf-c
-    - name: test protobuf-c
-      run: python ci.py test --project=protobuf-c
-    - name: pack
-      run: python ci.py pack --project=protobuf-c
+      run: python ci.py
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1

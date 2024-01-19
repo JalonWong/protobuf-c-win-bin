@@ -1,12 +1,19 @@
 import subprocess
 import argparse
+import sys
 import os
 import shutil
 import zipfile
 from glob import glob
 
 
-def build_protobuf(cmake: bool) -> None:
+PYTHON = sys.executable
+
+
+def build_protoc(cmake: bool) -> None:
+    print("\n---------------------------------------------------------------------------")
+    print("---- Build protoc ---------------------------------------------------------")
+    print("---------------------------------------------------------------------------\n", flush=True)
     if cmake:
         os.makedirs("protobuf/solution", exist_ok=True)
         os.chdir("protobuf/solution")
@@ -22,6 +29,9 @@ def build_protobuf(cmake: bool) -> None:
 
 
 def build_protobuf_c(cmake: bool) -> None:
+    print("\n---------------------------------------------------------------------------")
+    print("---- Build protobuf-c ------------------------------------------------------")
+    print("---------------------------------------------------------------------------\n", flush=True)
     if cmake:
         p = os.path.abspath("protobuf/solution/out/bin")
         os.makedirs("protobuf-c/build-cmake/build", exist_ok=True)
@@ -54,6 +64,9 @@ def build_protobuf_c(cmake: bool) -> None:
 
 
 def test_protobuf_c() -> None:
+    print("\n---------------------------------------------------------------------------")
+    print("---- Test protobuf-c ------------------------------------------------------")
+    print("---------------------------------------------------------------------------\n", flush=True)
     subprocess.run(
         [
             "protobuf/solution/Release/protoc.exe",
@@ -69,26 +82,12 @@ def test_protobuf_c() -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Analyze .config to config.h")
-    parser.add_argument("mode")
-    parser.add_argument("--project", required=True, type=str)
-    parser.add_argument("--cmake", action="store_true")
-    args = parser.parse_args()
+    subprocess.run([PYTHON, "--version"])
+    subprocess.run("bazel --version".split(), check=True)
 
-    if args.mode == "build":
-        if args.project == "protobuf":
-            build_protobuf(args.cmake)
-        elif args.project == "protobuf-c":
-            build_protobuf_c(args.cmake)
-        else:
-            raise ValueError("Unknown project")
-    elif args.mode == "test":
-        if args.project == "protobuf-c":
-            test_protobuf_c()
-        else:
-            raise ValueError("Unknown project")
-    elif args.mode == "pack":
-        with zipfile.ZipFile("protobuf-c-win64.zip", "w", zipfile.ZIP_DEFLATED) as zip_f:
-            zip_f.write("protobuf-c/bazel-bin/protoc-gen-c.exe", "bin/protoc-gen-c.exe")
-    else:
-        raise ValueError("Unknown mode")
+    build_protoc(True)
+    build_protobuf_c(False)
+    test_protobuf_c()
+
+    with zipfile.ZipFile("protobuf-c-win64.zip", "w", zipfile.ZIP_DEFLATED) as zip_f:
+        zip_f.write("protobuf-c/bazel-bin/protoc-gen-c.exe", "bin/protoc-gen-c.exe")
