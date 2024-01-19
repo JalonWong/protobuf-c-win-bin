@@ -1,5 +1,4 @@
 import subprocess
-import argparse
 import sys
 import os
 import shutil
@@ -11,9 +10,9 @@ PYTHON = sys.executable
 
 
 def build_protoc(cmake: bool) -> None:
-    print("\n---------------------------------------------------------------------------")
+    print("---------------------------------------------------------------------------")
     print("---- Build protoc ---------------------------------------------------------")
-    print("---------------------------------------------------------------------------\n", flush=True)
+    print("---------------------------------------------------------------------------", flush=True)
     cwd = os.getcwd()
     if cmake:
         os.makedirs("protobuf/solution", exist_ok=True)
@@ -31,9 +30,9 @@ def build_protoc(cmake: bool) -> None:
 
 
 def build_protobuf_c(cmake: bool) -> None:
-    print("\n---------------------------------------------------------------------------")
-    print("---- Build protobuf-c ------------------------------------------------------")
-    print("---------------------------------------------------------------------------\n", flush=True)
+    print("---------------------------------------------------------------------------")
+    print("---- Build protobuf-c -----------------------------------------------------")
+    print("---------------------------------------------------------------------------", flush=True)
     cwd = os.getcwd()
     if cmake:
         p = os.path.abspath("protobuf/solution/out/bin")
@@ -41,7 +40,7 @@ def build_protobuf_c(cmake: bool) -> None:
         os.chdir("protobuf-c/build-cmake/build")
         env = os.environ.copy()
         env["PATH"] = p + ";" + env["PATH"]
-        subprocess.run("cmake -DCMAKE_INSTALL_PREFIX=out ..", shell=True, check=True)
+        subprocess.run("cmake -DCMAKE_INSTALL_PREFIX=out ..", shell=True, check=True, env=env)
         subprocess.run("msbuild INSTALL.vcxproj /property:Configuration=Release".split(), check=True)
     else:
         src = glob("src/*")
@@ -68,19 +67,21 @@ def build_protobuf_c(cmake: bool) -> None:
 
 
 def test_protobuf_c() -> None:
-    print("\n---------------------------------------------------------------------------")
+    print("---------------------------------------------------------------------------")
     print("---- Test protobuf-c ------------------------------------------------------")
-    print("---------------------------------------------------------------------------\n", flush=True)
+    print("---------------------------------------------------------------------------", flush=True)
     cwd = os.getcwd()
+    env = os.environ.copy()
+    env["PATH"] = os.path.abspath("./protobuf-c/bazel-bin") + ";" + env["PATH"]
     subprocess.run(
         [
             "protobuf/solution/Release/protoc.exe",
-            "--plugin=protobuf-c/bazel-bin/protoc-gen-c.exe",
             "-I=protobuf-c/t",
             "--c_out=protobuf-c/t",
             "test-proto3.proto",
         ],
         check=True,
+        env=env,
     )
     os.chdir("protobuf-c")
     subprocess.run("bazel test :test".split(), check=True)
@@ -90,7 +91,6 @@ def test_protobuf_c() -> None:
 if __name__ == "__main__":
     subprocess.run([PYTHON, "--version"])
     subprocess.run("bazel --version".split(), check=True)
-    print("\n")
 
     build_protoc(True)
     build_protobuf_c(False)
