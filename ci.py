@@ -14,6 +14,7 @@ def build_protoc(cmake: bool) -> None:
     print("\n---------------------------------------------------------------------------")
     print("---- Build protoc ---------------------------------------------------------")
     print("---------------------------------------------------------------------------\n", flush=True)
+    cwd = os.getcwd()
     if cmake:
         os.makedirs("protobuf/solution", exist_ok=True)
         os.chdir("protobuf/solution")
@@ -26,12 +27,14 @@ def build_protoc(cmake: bool) -> None:
     else:
         os.chdir("protobuf")
         subprocess.run("bazel build --enable_bzlmod=false :protoc".split(), check=True)
+    os.chdir(cwd)
 
 
 def build_protobuf_c(cmake: bool) -> None:
     print("\n---------------------------------------------------------------------------")
     print("---- Build protobuf-c ------------------------------------------------------")
     print("---------------------------------------------------------------------------\n", flush=True)
+    cwd = os.getcwd()
     if cmake:
         p = os.path.abspath("protobuf/solution/out/bin")
         os.makedirs("protobuf-c/build-cmake/build", exist_ok=True)
@@ -61,12 +64,14 @@ def build_protobuf_c(cmake: bool) -> None:
         )
         os.chdir("protobuf-c")
         subprocess.run("bazel build all".split(), check=True)
+    os.chdir(cwd)
 
 
 def test_protobuf_c() -> None:
     print("\n---------------------------------------------------------------------------")
     print("---- Test protobuf-c ------------------------------------------------------")
     print("---------------------------------------------------------------------------\n", flush=True)
+    cwd = os.getcwd()
     subprocess.run(
         [
             "protobuf/solution/Release/protoc.exe",
@@ -79,11 +84,13 @@ def test_protobuf_c() -> None:
     )
     os.chdir("protobuf-c")
     subprocess.run("bazel test :test".split(), check=True)
+    os.chdir(cwd)
 
 
 if __name__ == "__main__":
     subprocess.run([PYTHON, "--version"])
     subprocess.run("bazel --version".split(), check=True)
+    print("\n")
 
     build_protoc(True)
     build_protobuf_c(False)

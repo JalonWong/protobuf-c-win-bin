@@ -16,7 +16,7 @@ jobs:
       with:
         vs-version: '[16,17)'
         msbuild-architecture: x64
-    - name: build protobuf
+    - name: build
       run: python ci.py
     - name: Create Release
       id: create_release
