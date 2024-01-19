@@ -1,8 +1,14 @@
 workspace(name = "protobuf-c")
 
-local_repository(
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+git_repository(
     name = "com_google_protobuf",
-    path = "../protobuf",
+    commit = "7789b3ac85248ad75631a1919071fa268e466210",
+    remote = "https://github.com/protocolbuffers/protobuf.git",
+    # tag = "v24.4",
 )
+
 load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
 protobuf_deps()

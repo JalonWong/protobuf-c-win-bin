@@ -21,7 +21,6 @@ filegroup(
     name = "all",
     srcs = [
         ":protoc-gen-c",
-        "//protobuf-c",
     ],
 )
 

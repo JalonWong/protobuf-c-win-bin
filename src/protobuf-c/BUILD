@@ -9,7 +9,7 @@ cc_library(
         "protobuf-c.h",
     ],
     includes = [
-        "",
+        ".",
     ],
 )
 
@@ -22,7 +22,7 @@ cc_library(
         "protobuf-c.pb.h",
     ],
     includes = [
-        "",
+        ".",
     ],
     deps = [
         "@com_google_protobuf//:protoc_lib",
