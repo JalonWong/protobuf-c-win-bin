@@ -1,6 +1,7 @@
-cd protobuf-c\build-cmake
-mkdir build
-cd build
-set PATH=..\..\..\protobuf\cmake\build\solution\out\bin;%PATH%
-cmake -DCMAKE_INSTALL_PREFIX=.\out\ ..\
-msbuild INSTALL.vcxproj /property:Configuration=Release
+protobuf\solution\Release\protoc.exe -I=protobuf-c\protobuf-c -I=protobuf\src --cpp_out=protobuf-c\protobuf-c protobuf-c.proto
+cd protobuf-c
+bazel build protoc-gen-c
+cd ..
+protobuf\solution\Release\protoc.exe --plugin=protobuf-c\bazel-bin\protoc-gen-c.exe -I=protobuf-c\t --c_out=protobuf-c\t test-proto3.proto
+cd protobuf-c
+bazel test test
