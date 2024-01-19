@@ -2,9 +2,7 @@ package(default_visibility = ["//visibility:public"])
 
 cc_binary(
     name = "protoc-gen-c",
-    srcs = glob(["protoc-c/*.cc"]) + [
-        "protobuf-c/protobuf-c.pb.cc",
-    ],
+    srcs = glob(["protoc-c/*.cc"]),
     copts = [
         "/wd4267",
         "/wd4244",
@@ -15,19 +13,29 @@ cc_binary(
         "protoc-c",
     ],
     deps = [
-        "@com_google_protobuf//:protoc_lib",
+        "//protobuf-c:protobuf-c-pb",
+    ],
+)
+
+filegroup(
+    name = "all",
+    srcs = [
+        ":protoc-gen-c",
+        "//protobuf-c",
     ],
 )
 
 cc_test(
     name = "test",
     srcs = [
-        "protobuf-c/protobuf-c.c",
         "t/generated-code/test-generated-code.c",
     ] + glob(["t/*.pb-c.c"]),
     defines = ["PROTO3"],
     includes = [
         "protobuf-c",
         "t",
+    ],
+    deps = [
+        "//protobuf-c",
     ],
 )

@@ -1,3 +1,5 @@
 common --spawn_strategy=local
 common --verbose_failures
 common --enable_bzlmod=false
+
+build -c opt
