@@ -1,5 +1,8 @@
 common --spawn_strategy=local
 common --verbose_failures
-common --enable_bzlmod=false
 
 build -c opt
+build --extra_toolchains=@local_config_cc//:cc-toolchain-x64_windows-clang-cl
+build --extra_execution_platforms=@protobuf//build_defs:x64_windows-clang-cl
+build --host_platform=@protobuf//build_defs:x64_windows-clang-cl
+build --cxxopt=/std:c++17 --host_cxxopt=/std:c++17

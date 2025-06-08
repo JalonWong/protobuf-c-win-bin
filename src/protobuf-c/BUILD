@@ -25,6 +25,6 @@ cc_library(
         ".",
     ],
     deps = [
-        "@com_google_protobuf//:protoc_lib",
+        "@protobuf//:protoc_lib",
     ],
 )
