@@ -1,6 +1,7 @@
 name: release
 
 on:
+  workflow_dispatch:
   push:
     tags:
     - 'v*'
@@ -25,5 +26,6 @@ jobs:
       run: python ci.py
     - name: Create Release
       uses: softprops/action-gh-release@v2
+      if: github.ref_type == 'tag'
       with:
           files: protobuf-c-win64.zip
