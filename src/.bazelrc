@@ -1,4 +1,3 @@
-common --spawn_strategy=local
 common --verbose_failures
 
 test -c dbg

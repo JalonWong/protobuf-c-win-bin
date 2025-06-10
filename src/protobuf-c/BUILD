@@ -18,7 +18,5 @@ cc_library(
     hdrs = [
         "protobuf-c.h",
     ],
-    includes = [
-        ".",
-    ],
+    includes = ["."],
 )
