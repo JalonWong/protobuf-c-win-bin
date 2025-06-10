@@ -42,71 +42,12 @@ def test_generate_file() -> None:
     with open("t/generated-code2/test-full-cxx-output.inc", "wb") as f:
         f.write(ret.stdout)
 
+
 def test_protobuf_c() -> None:
     print("---------------------------------------------------------------------------")
     print("---- Test protobuf-c ------------------------------------------------------")
     print("---------------------------------------------------------------------------", flush=True)
     test_generate_file()
-    subprocess.run("bazel build @protobuf//:protoc".split(), check=True)
-    protoc = os.path.realpath("bazel-bin/external/protobuf+/protoc")
-
-    print(protoc)
-    print("---- protoc ------------------------------------------------------", flush=True)
-
-    env = os.environ.copy()
-    env["PATH"] = os.path.abspath("./") + ";" + env["PATH"]
-    subprocess.run(
-        f"{protoc} -I=t --c_out=t test-proto3.proto".split(),
-        check=True,
-        env=env,
-    )
-
-    subprocess.run(
-        [
-            protoc,
-            "-I=t",
-            "-I=.",
-            "-I=bazel-protobuf-c/external/protobuf+/src",
-            "--c_out=t",
-            "test.proto",
-            "test-full.proto",
-            "test-optimized.proto",
-        ],
-        check=True,
-        env=env,
-    )
-
-    print("issue204.proto")
-    subprocess.run(
-        [
-            protoc,
-            "-I=t/issue204",
-            "-I=.",
-            "-I=bazel-protobuf-c/external/protobuf+/src",
-            "--c_out=t/issue204",
-            "issue204.proto",
-        ],
-        check=True,
-        env=env,
-    )
-    issues = [
-        "issue220",
-        "issue251",
-        "issue330",
-        "issue375",
-        "issue389",
-        "issue440",
-        "issue745",
-    ]
-    for issue in issues:
-        print(f"{issue}.proto")
-        subprocess.run(
-            f"{protoc} -I=t/{issue} --c_out=t/{issue} {issue}.proto".split(),
-            check=True,
-            env=env,
-        )
-
-    print("---- Test --------------------------------------------------------", flush=True)
     subprocess.run("bazel test //t/...".split(), check=True)
 
 

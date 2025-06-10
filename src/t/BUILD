@@ -1,55 +1,70 @@
+load("//:c_proto.bzl", "c_proto_library")
+
 package(default_visibility = ["//visibility:public"])
 
-cc_test(
-    name = "test1-3",
-    srcs = [
-        "generated-code/test-generated-code.c",
-        "test-proto3.pb-c.c",
-    ],
-    defines = ["PROTO3"],
-    includes = ["."],
-    deps = ["//protobuf-c"],
-)
-
-cc_test(
-    name = "test1-2",
-    srcs = [
-        "generated-code/test-generated-code.c",
-        "test.pb-c.c",
-    ],
-    includes = ["."],
-    deps = ["//protobuf-c"],
-)
-
-cc_proto_library(
-    name = "test-full_cc_proto",
-    deps = [":test-full_proto"],
-)
 proto_library(
     name = "test-full_proto",
     srcs = ["test-full.proto"],
     deps = ["//protobuf-c:protobuf-c_proto"],
 )
-
+cc_proto_library(
+    name = "test-full_cc_proto",
+    deps = [":test-full_proto"],
+)
 cc_binary(
     name = "gen2",
-    srcs = [
-        "generated-code2/cxx-generate-packed-data.cc",
-    ],
+    srcs = ["generated-code2/cxx-generate-packed-data.cc"],
     includes = ["."],
     deps = [":test-full_cc_proto"],
 )
 
+proto_library(
+    name = "test-proto3_proto",
+    srcs = ["test-proto3.proto"],
+)
+c_proto_library(
+    name = "test-proto3_c_proto",
+    deps = [":test-proto3_proto"],
+)
+cc_test(
+    name = "test1-3",
+    srcs = ["generated-code/test-generated-code.c"],
+    defines = ["PROTO3"],
+    deps = [":test-proto3_c_proto"],
+)
+
+proto_library(
+    name = "test_proto",
+    srcs = ["test.proto"],
+    deps = ["//protobuf-c:protobuf-c_proto"],
+)
+c_proto_library(
+    name = "test_c_proto",
+    deps = [":test_proto"],
+)
+cc_test(
+    name = "test1-2",
+    srcs = ["generated-code/test-generated-code.c"],
+    deps = [":test_c_proto"],
+)
+
+proto_library(
+    name = "test-optimized_proto",
+    srcs = ["test-optimized.proto"],
+)
+c_proto_library(
+    name = "test-optimized_c_proto",
+    deps = [":test-optimized_proto"],
+)
+c_proto_library(
+    name = "test-full_c_proto",
+    deps = [":test-full_proto"],
+)
 cc_test(
     name = "test2",
-    srcs = [
-        "generated-code2/test-generated-code2.c",
-        "test-full.pb-c.c",
-        "test-optimized.pb-c.c",
+    srcs = ["generated-code2/test-generated-code2.c"],
+    deps = [
+        ":test-full_c_proto",
+        ":test-optimized_c_proto",
     ],
-    includes = [
-        ".",
-        "generated-code2",
-    ],
-    deps = ["//protobuf-c"],
 )
