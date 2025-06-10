@@ -5,10 +5,11 @@ cc_binary(
     srcs = glob(["*.cc"]),
     defines = ["PACKAGE_STRING=\\\"protobuf-c\\\""],
     includes = [
-        "//protobuf-c",
         ".",
     ],
     deps = [
-        "//protobuf-c:protobuf-c-pb",
+        "//protobuf-c:protobuf-c",
+        "//protobuf-c:protobuf-c_cc_proto",
+        "@protobuf//:protoc_lib",
     ],
 )
