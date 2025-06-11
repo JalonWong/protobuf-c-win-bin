@@ -1,4 +1,3 @@
-load("@rules_cc//cc:defs.bzl", "cc_library")
 
 def _impl(ctx):
     proto = ctx.attr.deps[0][ProtoInfo]
@@ -38,7 +37,7 @@ _proto_c = rule(
             providers = [ProtoInfo],
         ),
         "_protoc": attr.label(
-            default = Label("@protobuf//:protoc"),
+            default = "@protobuf//:protoc",
             executable = True,
             cfg = "exec",
         ),
@@ -53,13 +52,9 @@ def c_proto_library(name, deps = []):
         deps = deps,
     )
 
-    cc_library(
+    native.cc_library(
         name = name,
         srcs = [name_pb],
-        includes = [
-            ".",
-        ],
-        deps = [
-            "//protobuf-c:protobuf-c",
-        ],
+        includes = ["."],
+        deps = ["//protobuf-c:protobuf-c"],
     )

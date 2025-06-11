@@ -2,8 +2,9 @@ common --verbose_failures
 
 test -c dbg
 build -c opt
-build --extra_toolchains=@local_config_cc//:cc-toolchain-x64_windows-clang-cl
-build --extra_execution_platforms=@protobuf//build_defs:x64_windows-clang-cl
-build --host_platform=@protobuf//build_defs:x64_windows-clang-cl
-build --cxxopt=/std:c++17 --host_cxxopt=/std:c++17
+build:linux --copt=-Iexternal/abseil-cpp+
+build:windows --extra_toolchains=@local_config_cc//:cc-toolchain-x64_windows-clang-cl
+build:windows --extra_execution_platforms=@protobuf//build_defs:x64_windows-clang-cl
+build:windows --host_platform=@protobuf//build_defs:x64_windows-clang-cl
+build:windows --cxxopt=/std:c++17 --host_cxxopt=/std:c++17
 # build --subcommands

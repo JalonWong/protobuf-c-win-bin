@@ -2,7 +2,10 @@ package(default_visibility = ["//visibility:public"])
 
 cc_binary(
     name = "protoc-gen-c",
-    srcs = glob(["*.cc"]),
+    srcs = glob([
+        "*.cc",
+        "*.h"
+    ]),
     includes = ["."],
     deps = [
         "//protobuf-c:protobuf-c",
