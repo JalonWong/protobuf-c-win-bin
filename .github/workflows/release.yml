@@ -11,14 +11,20 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-2022]
+        os: [ubuntu-24.04, windows-2022, macos-13, macos-latest]
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             goos: linux
-            suffix: linux
+            suffix: linux-amd64
           - os: windows-2022
             goos: windows
-            suffix: windows
+            suffix: windows-amd64
+          - os: macos-13
+            goos: darwin
+            suffix: osx-amd64
+          - os: macos-latest
+            goos: darwin
+            suffix: osx-arm64
 
     steps:
       - uses: actions/checkout@main
@@ -26,7 +32,7 @@ jobs:
         with:
           python-version: '3.13'
       - name: Add msbuild to PATH
-        if: matrix.suffix == 'windows'
+        if: matrix.goos == 'windows'
         uses: microsoft/setup-msbuild@v2
         with:
           vs-version: '[17,18)'
@@ -38,8 +44,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.suffix }}-amd64
-          path: protobuf-c-${{ matrix.suffix }}-amd64.*
+          name: ${{ matrix.suffix }}
+          path: protobuf-c-${{ matrix.suffix }}.*
 
   release:
     needs: build

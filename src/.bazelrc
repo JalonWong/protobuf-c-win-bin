@@ -3,6 +3,10 @@ common --verbose_failures
 
 test -c dbg
 build -c opt
+build:osx --copt=-I.
+build:osx --copt=-Ibazel-out/darwin_x86_64-opt/bin
+build:osx --copt=-Ibazel-out/darwin_x86_64-dbg/bin
+build:osx --copt=-Iexternal/abseil-cpp+
 build:linux --copt=-I.
 build:linux --copt=-Ibazel-out/k8-opt/bin
 build:linux --copt=-Ibazel-out/k8-dbg/bin

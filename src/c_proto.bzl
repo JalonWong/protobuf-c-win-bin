@@ -58,3 +58,18 @@ def c_proto_library(name, deps = []):
         includes = ["."],
         deps = ["//protobuf-c:protobuf-c"],
     )
+
+def _get_compiler_info_impl(ctx):
+    toolchain = ctx.toolchains["@bazel_tools//tools/cpp:toolchain_type"]
+    compiler = toolchain.cc.compiler_executable
+    output_file = ctx.actions.declare_file(ctx.label.name + ".txt")
+    ctx.actions.write(
+        output = output_file,
+        content = "Compiler: {}".format(compiler),
+    )
+    return [DefaultInfo(files = depset([output_file]))]
+
+get_compiler_info = rule(
+    implementation = _get_compiler_info_impl,
+    toolchains = ["@bazel_tools//tools/cpp:toolchain_type"],
+)

@@ -9,6 +9,18 @@ from glob import glob
 PYTHON = sys.executable
 SYSTEM = platform.system().lower()
 EXT = ".exe" if SYSTEM == "windows" else ""
+if SYSTEM == "darwin":
+    SYSTEM = "osx"
+ARCH =  platform.machine()
+
+def show_compiler_info() -> None:
+    subprocess.run(f"bazel build --config={SYSTEM} //:compiler_info".split(), check=True)
+    with open("bazel-bin/compiler_info.txt", "r") as f:
+        cc = f.read().split(" ", maxsplit=1)[1].strip()
+        if cc.startswith("external"):
+            cc = "bazel-protobuf-c/" + cc
+        print("---- Compiler info ------------------------------------------------------", flush=True)
+        subprocess.run([cc, "--version"], check=True)
 
 
 def build_protobuf_c() -> None:
@@ -16,7 +28,7 @@ def build_protobuf_c() -> None:
     print("---- Build protobuf-c -----------------------------------------------------")
     print("---------------------------------------------------------------------------", flush=True)
     subprocess.run(f"bazel build --config={SYSTEM} //protoc-gen-c:protoc-gen-c".split(), check=True)
-    shutil.copy("bazel-bin/protoc-gen-c/protoc-gen-c" + EXT, "./t/")
+    shutil.copy(f"bazel-bin/protoc-gen-c/protoc-gen-c{EXT}", "./t/")
 
 
 def file_replace(file_path: str, old: str, new: str) -> None:
@@ -54,12 +66,11 @@ def test_protobuf_c() -> None:
 
 
 if __name__ == "__main__":
+    print("machine:", ARCH, flush=True)
     subprocess.run([PYTHON, "--version"])
     subprocess.run("bazel --version".split(), check=True)
-    if SYSTEM == "windows":
-        subprocess.run("clang-cl --version".split(), check=True)
 
-    print("---- Copy files ------------------------------------------------------")
+    print("---- Copy files ------------------------------------------------------", flush=True)
     src = glob("src/**", recursive=True, include_hidden=True)
     for s in src:
         if os.path.isfile(s):
@@ -68,14 +79,18 @@ if __name__ == "__main__":
 
     cwd = os.getcwd()
     os.chdir("protobuf-c")
+    if ARCH == "arm64":
+        file_replace(".bazelrc", "x86_64", "arm64")
+    show_compiler_info()
     build_protobuf_c()
     test_protobuf_c()
 
     os.chdir(cwd)
-    if SYSTEM == "windows":
+    if SYSTEM == "windows" or SYSTEM == "osx":
         import zipfile
-        with zipfile.ZipFile("protobuf-c-windows-amd64.zip", "w", zipfile.ZIP_DEFLATED) as zip_f:
-            zip_f.write("protobuf-c/t/protoc-gen-c.exe", "bin/protoc-gen-c.exe")
+        arch = "arm64" if ARCH == "arm64" else "amd64"
+        with zipfile.ZipFile(f"protobuf-c-{SYSTEM}-{arch}.zip", "w", zipfile.ZIP_DEFLATED) as zip_f:
+            zip_f.write(f"protobuf-c/t/protoc-gen-c{EXT}", f"bin/protoc-gen-c{EXT}")
             zip_f.write("protobuf-c/protobuf-c/protobuf-c.c", "src/protobuf-c.c")
             zip_f.write("protobuf-c/protobuf-c/protobuf-c.h", "src/protobuf-c.h")
     elif SYSTEM == "linux":
