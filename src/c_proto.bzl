@@ -24,7 +24,7 @@ def _impl(ctx):
         arguments = [args],
         mnemonic = "ProtoCompile",
         progress_message = "Generating C proto files for %s" % ctx.label,
-        use_default_shell_env = True,
+        env = {"PATH": "t"},
     )
 
     return [DefaultInfo(files = depset(outputs))]

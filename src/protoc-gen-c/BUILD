@@ -8,9 +8,9 @@ cc_binary(
     ]),
     includes = ["."],
     deps = [
+        "//:base",
         "//protobuf-c:protobuf-c",
         "//protobuf-c:protobuf-c_cc_proto",
         "@protobuf//:protoc_lib",
-        "//:ver",
     ],
 )

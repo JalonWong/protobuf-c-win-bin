@@ -7,25 +7,50 @@ on:
     - 'v*'
 
 jobs:
-  excavate:
-    name: release
-    runs-on: windows-2022
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-2022]
+        include:
+          - os: ubuntu-latest
+            goos: linux
+            suffix: linux
+          - os: windows-2022
+            goos: windows
+            suffix: windows
+
     steps:
-    - uses: actions/checkout@main
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.13'
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v2
-      with:
-        vs-version: '[17,18)'
-        msbuild-architecture: x64
-    - name: submodule
-      run: git submodule update --init --recursive
-    - name: build
-      run: python ci.py
-    - name: Create Release
-      uses: softprops/action-gh-release@v2
-      if: github.ref_type == 'tag'
-      with:
-          files: protobuf-c-win64.zip
+      - uses: actions/checkout@main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Add msbuild to PATH
+        if: matrix.suffix == 'windows'
+        uses: microsoft/setup-msbuild@v2
+        with:
+          vs-version: '[17,18)'
+          msbuild-architecture: x64
+      - name: submodule
+        run: git submodule update --init --recursive
+      - name: build
+        run: python ci.py
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.suffix }}-amd64
+          path: protobuf-c-${{ matrix.suffix }}-amd64.*
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          files: artifacts/*/*

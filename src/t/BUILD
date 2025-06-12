@@ -13,7 +13,10 @@ cc_proto_library(
 )
 cc_binary(
     name = "gen2",
-    srcs = ["generated-code2/cxx-generate-packed-data.cc"],
+    srcs = [
+        "generated-code2/cxx-generate-packed-data.cc",
+        "generated-code2/common-test-arrays.h",
+    ],
     includes = ["."],
     deps = [":test-full_cc_proto"],
 )

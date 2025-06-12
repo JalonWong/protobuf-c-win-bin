@@ -3,7 +3,6 @@ import sys
 import os
 import platform
 import shutil
-import zipfile
 from glob import glob
 
 
@@ -17,7 +16,7 @@ def build_protobuf_c() -> None:
     print("---- Build protobuf-c -----------------------------------------------------")
     print("---------------------------------------------------------------------------", flush=True)
     subprocess.run(f"bazel build --config={SYSTEM} //protoc-gen-c:protoc-gen-c".split(), check=True)
-    shutil.copy("bazel-bin/protoc-gen-c/protoc-gen-c" + EXT, "./")
+    shutil.copy("bazel-bin/protoc-gen-c/protoc-gen-c" + EXT, "./t/")
 
 
 def file_replace(file_path: str, old: str, new: str) -> None:
@@ -74,5 +73,14 @@ if __name__ == "__main__":
 
     os.chdir(cwd)
     if SYSTEM == "windows":
-        with zipfile.ZipFile("protobuf-c-win64.zip", "w", zipfile.ZIP_DEFLATED) as zip_f:
-            zip_f.write("protobuf-c/protoc-gen-c.exe", "bin/protoc-gen-c.exe")
+        import zipfile
+        with zipfile.ZipFile("protobuf-c-windows-amd64.zip", "w", zipfile.ZIP_DEFLATED) as zip_f:
+            zip_f.write("protobuf-c/t/protoc-gen-c.exe", "bin/protoc-gen-c.exe")
+            zip_f.write("protobuf-c/protobuf-c/protobuf-c.c", "src/protobuf-c.c")
+            zip_f.write("protobuf-c/protobuf-c/protobuf-c.h", "src/protobuf-c.h")
+    elif SYSTEM == "linux":
+        import tarfile
+        with tarfile.open("protobuf-c-linux-amd64.tar.gz", "w:gz") as tar:
+            tar.add("protobuf-c/t/protoc-gen-c", arcname="bin/protoc-gen-c")
+            tar.add("protobuf-c/protobuf-c/protobuf-c.c", arcname="src/protobuf-c.c")
+            tar.add("protobuf-c/protobuf-c/protobuf-c.h", arcname="src/protobuf-c.h")

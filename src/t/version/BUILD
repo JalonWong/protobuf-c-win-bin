@@ -5,7 +5,7 @@ cc_test(
     srcs = glob(["*.c"]),
     includes = ["."],
     deps = [
-        "//:ver",
-        "//protobuf-c",
+        "//:base",
+        "//protobuf-c:protobuf-c",
     ],
 )

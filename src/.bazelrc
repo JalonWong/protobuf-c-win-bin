@@ -1,7 +1,11 @@
+common --spawn_strategy=local
 common --verbose_failures
 
 test -c dbg
 build -c opt
+build:linux --copt=-I.
+build:linux --copt=-Ibazel-out/k8-opt/bin
+build:linux --copt=-Ibazel-out/k8-dbg/bin
 build:linux --copt=-Iexternal/abseil-cpp+
 build:windows --extra_toolchains=@local_config_cc//:cc-toolchain-x64_windows-clang-cl
 build:windows --extra_execution_platforms=@protobuf//build_defs:x64_windows-clang-cl
