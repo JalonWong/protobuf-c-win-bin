@@ -1,6 +1,6 @@
-# protobuf-c-win-bin
+# protobuf-c Release
 
-The compiled product of the [protobuf-c](https://github.com/protobuf-c/protobuf-c) on the windows x64 platform.
+The compiled product of the [protobuf-c](https://github.com/protobuf-c/protobuf-c).
 
 ## submodule
 - protobuf `v31.1`
