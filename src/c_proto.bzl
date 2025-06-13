@@ -11,20 +11,23 @@ def _impl(ctx):
         outputs.append(ctx.actions.declare_file(base_name + ".pb-c.h"))
         outputs.append(ctx.actions.declare_file(base_name + ".pb-c.c"))
 
+    protoc_c = ctx.executable._protoc_c
+
     args = ctx.actions.args()
+    args.add("--plugin=protoc-gen-c=" + protoc_c.path)
     args.add("--c_out=" + output_dir)
     args.add_all(["-I" + p for p in proto.transitive_proto_path.to_list()])
     args.add_all([proto_file.path for proto_file in proto_files])
     # print(args)
 
     ctx.actions.run(
-        inputs = proto_files,
+        inputs = proto.transitive_sources,
         outputs = outputs,
         executable = ctx.executable._protoc,
+        tools = [protoc_c],
         arguments = [args],
         mnemonic = "ProtoCompile",
         progress_message = "Generating C proto files for %s" % ctx.label,
-        env = {"PATH": "t"},
     )
 
     return [DefaultInfo(files = depset(outputs))]
@@ -38,6 +41,11 @@ _proto_c = rule(
         ),
         "_protoc": attr.label(
             default = "@protobuf//:protoc",
+            executable = True,
+            cfg = "exec",
+        ),
+        "_protoc_c": attr.label(
+            default = "//out:proto_c",
             executable = True,
             cfg = "exec",
         ),

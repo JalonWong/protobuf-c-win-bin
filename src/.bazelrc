@@ -1,4 +1,3 @@
-common --spawn_strategy=local
 common --verbose_failures
 
 test -c dbg
@@ -7,12 +6,18 @@ build:osx --copt=-I.
 build:osx --copt=-Ibazel-out/darwin_x86_64-opt/bin
 build:osx --copt=-Ibazel-out/darwin_x86_64-dbg/bin
 build:osx --copt=-Iexternal/abseil-cpp+
+build:osx --copt=-Wno-sign-compare
+build:osx --copt=-Wno-deprecated-declarations
+build:osx --cxxopt=-std=c++17 --host_cxxopt=-std=c++17
 build:linux --copt=-I.
 build:linux --copt=-Ibazel-out/k8-opt/bin
 build:linux --copt=-Ibazel-out/k8-dbg/bin
 build:linux --copt=-Iexternal/abseil-cpp+
+build:linux --copt=-Wno-sign-compare
+build:linux --copt=-Wno-deprecated-declarations
 build:windows --extra_toolchains=@local_config_cc//:cc-toolchain-x64_windows-clang-cl
 build:windows --extra_execution_platforms=@protobuf//build_defs:x64_windows-clang-cl
 build:windows --host_platform=@protobuf//build_defs:x64_windows-clang-cl
+build:windows --copt=-Wno-invalid-offsetof
 build:windows --cxxopt=/std:c++17 --host_cxxopt=/std:c++17
 # build --subcommands

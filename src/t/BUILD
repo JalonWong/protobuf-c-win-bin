@@ -65,7 +65,11 @@ c_proto_library(
 )
 cc_test(
     name = "test2",
-    srcs = ["generated-code2/test-generated-code2.c"],
+    srcs = [
+        "generated-code2/test-generated-code2.c",
+        "generated-code2/test-full-cxx-output.inc",
+        "generated-code2/common-test-arrays.h",
+    ],
     deps = [
         ":test-full_c_proto",
         ":test-optimized_c_proto",
