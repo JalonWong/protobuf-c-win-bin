@@ -73,11 +73,11 @@ if __name__ == "__main__":
     print("---- Copy files ------------------------------------------------------", flush=True)
     if not os.path.exists("protobuf-c/out"):
         os.mkdir("protobuf-c/out")
-    src = glob("src/**", recursive=True, include_hidden=True)
+    src = glob("src_copy/**", recursive=True, include_hidden=True)
     for s in src:
         if os.path.isfile(s):
             print(s)
-            shutil.copy(s, s.replace("src", "protobuf-c"))
+            shutil.copy(s, s.replace("src_copy", "protobuf-c"))
 
     cwd = os.getcwd()
     os.chdir("protobuf-c")
@@ -85,8 +85,8 @@ if __name__ == "__main__":
         f.write("\n/bazel-*")
     if ARCH == "arm64":
         file_replace(".bazelrc", "x86_64", "arm64")
-    # show_compiler_info()
-    # build_protobuf_c()
+    show_compiler_info()
+    build_protobuf_c()
     test_protobuf_c()
 
     os.chdir(cwd)

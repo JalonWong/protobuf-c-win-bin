@@ -40,7 +40,7 @@ jobs:
       - name: submodule
         run: git submodule update --init --recursive
       - name: build
-        run: python ci.py
+        run: python release.py
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
