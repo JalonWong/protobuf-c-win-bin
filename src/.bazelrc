@@ -18,6 +18,6 @@ build:linux --copt=-Wno-deprecated-declarations
 build:windows --extra_toolchains=@local_config_cc//:cc-toolchain-x64_windows-clang-cl
 build:windows --extra_execution_platforms=@protobuf//build_defs:x64_windows-clang-cl
 build:windows --host_platform=@protobuf//build_defs:x64_windows-clang-cl
-build:windows --copt=-Wno-invalid-offsetof
+build:windows --cxxopt=-Wno-invalid-offsetof --host_cxxopt=-Wno-invalid-offsetof
 build:windows --cxxopt=/std:c++17 --host_cxxopt=/std:c++17
 # build --subcommands

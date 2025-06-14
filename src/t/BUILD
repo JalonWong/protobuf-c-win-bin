@@ -75,3 +75,20 @@ cc_test(
         ":test-optimized_c_proto",
     ],
 )
+
+test_suite(
+    name = "tests",
+    tests = [
+        ":test1-3",
+        ":test1-2",
+        ":test2",
+        "//t/issue204",
+        "//t/issue220",
+        "//t/issue251",
+        "//t/issue330",
+        "//t/issue375",
+        "//t/issue440",
+        "//t/issue745",
+        "//t/version",
+    ],
+)

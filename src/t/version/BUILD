@@ -1,7 +1,7 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_test(
-    name = "test_version",
+    name = "version",
     srcs = glob(["*.c"]),
     includes = ["."],
     deps = [

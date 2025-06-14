@@ -10,7 +10,7 @@ SYSTEM = platform.system().lower()
 EXT = ".exe" if SYSTEM == "windows" else ""
 if SYSTEM == "darwin":
     SYSTEM = "osx"
-ARCH = platform.machine()
+ARCH = platform.machine().lower()
 
 
 def show_compiler_info() -> None:
@@ -62,7 +62,7 @@ def test_protobuf_c() -> None:
     print("---- Test protobuf-c ------------------------------------------------------")
     print("---------------------------------------------------------------------------", flush=True)
     test_generate_file()
-    subprocess.run(f"bazel test --config={SYSTEM} //t/...".split(), check=True)
+    subprocess.run(f"bazel test --config={SYSTEM} //t:tests".split(), check=True)
 
 
 if __name__ == "__main__":
@@ -81,10 +81,12 @@ if __name__ == "__main__":
 
     cwd = os.getcwd()
     os.chdir("protobuf-c")
+    with open(".gitignore", "a") as f:
+        f.write("\n/bazel-*")
     if ARCH == "arm64":
         file_replace(".bazelrc", "x86_64", "arm64")
-    show_compiler_info()
-    build_protobuf_c()
+    # show_compiler_info()
+    # build_protobuf_c()
     test_protobuf_c()
 
     os.chdir(cwd)
