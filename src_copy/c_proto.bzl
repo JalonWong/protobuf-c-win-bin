@@ -1,71 +1,45 @@
+load("@bazel_tools//tools/cpp:toolchain_utils.bzl", "find_cpp_toolchain", "use_cpp_toolchain")
+load("@rules_c_proto//:base.bzl", "c_proto_aspect_impl")
 
-def _impl(ctx):
-    proto = ctx.attr.deps[0][ProtoInfo]
-
-    proto_files = proto.direct_sources
-    output_dir = ctx.genfiles_dir.path
-
-    outputs = []
-    for proto_file in proto_files:
-        base_name = proto_file.basename[:-6]  # remove .proto suffix
-        outputs.append(ctx.actions.declare_file(base_name + ".pb-c.h"))
-        outputs.append(ctx.actions.declare_file(base_name + ".pb-c.c"))
-
-    protoc_c = ctx.executable._protoc_c
-
-    args = ctx.actions.args()
-    args.add("--plugin=protoc-gen-c=" + protoc_c.path)
-    args.add("--c_out=" + output_dir)
-    args.add_all(["-I" + p for p in proto.transitive_proto_path.to_list()])
-    args.add_all([proto_file.path for proto_file in proto_files])
-    # print(args)
-
-    ctx.actions.run(
-        inputs = proto.transitive_sources,
-        outputs = outputs,
-        executable = ctx.executable._protoc,
-        tools = [protoc_c],
-        arguments = [args],
-        mnemonic = "ProtoCompile",
-        progress_message = "Generating C proto files for %s" % ctx.label,
-    )
-
-    return [DefaultInfo(files = depset(outputs))]
-
-_proto_c = rule(
-    implementation = _impl,
+__c_proto_aspect = aspect(
+    implementation = c_proto_aspect_impl,
+    attr_aspects = ["deps"],
+    fragments = ["cpp", "proto"],
+    required_providers = [ProtoInfo],
+    provides = [CcInfo],
+    toolchains = use_cpp_toolchain(),
     attrs = {
-        "deps": attr.label_list(
-            mandatory = True,
-            providers = [ProtoInfo],
+        "_c_deps": attr.label_list(
+            default = ["@protobuf_c//protobuf-c:protobuf-c"],
         ),
         "_protoc": attr.label(
             default = "@protobuf//:protoc",
             executable = True,
             cfg = "exec",
         ),
-        "_protoc_c": attr.label(
-            default = "//out:proto_c",
+        "_plugin": attr.label(
+            default = "@protobuf_c//out:proto_c",
             executable = True,
             cfg = "exec",
         ),
     },
-    provides = [DefaultInfo],
 )
 
-def c_proto_library(name, deps = []):
-    name_pb = name + "_pb"
-    _proto_c(
-        name = name_pb,
-        deps = deps,
-    )
+def _impl(ctx):
+    return [ctx.attr.deps[0][CcInfo]]
 
-    native.cc_library(
-        name = name,
-        srcs = [name_pb],
-        includes = ["."],
-        deps = ["//protobuf-c:protobuf-c"],
-    )
+c_proto_library = rule(
+    implementation = _impl,
+    attrs = {
+        "deps": attr.label_list(
+            # use aspect to avoid generating conflict
+            aspects = [__c_proto_aspect],
+            providers = [ProtoInfo],
+            allow_files = False,
+        ),
+    },
+    provides = [CcInfo],
+)
 
 def _get_compiler_info_impl(ctx):
     toolchain = ctx.toolchains["@bazel_tools//tools/cpp:toolchain_type"]

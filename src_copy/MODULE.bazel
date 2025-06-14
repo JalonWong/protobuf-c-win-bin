@@ -6,3 +6,8 @@ cc_configure = use_extension("@rules_cc//cc:extensions.bzl", "cc_configure_exten
 use_repo(cc_configure, "local_config_cc")
 
 bazel_dep(name = "protobuf", version = "31.1")
+bazel_dep(name = "rules_c_proto")
+local_path_override(
+    module_name="rules_c_proto",
+    path="..",
+)
