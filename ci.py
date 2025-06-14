@@ -1,17 +1,17 @@
-import subprocess
-import sys
 import os
 import platform
 import shutil
+import subprocess
+import sys
 from glob import glob
-
 
 PYTHON = sys.executable
 SYSTEM = platform.system().lower()
 EXT = ".exe" if SYSTEM == "windows" else ""
 if SYSTEM == "darwin":
     SYSTEM = "osx"
-ARCH =  platform.machine()
+ARCH = platform.machine()
+
 
 def show_compiler_info() -> None:
     subprocess.run(f"bazel build --config={SYSTEM} //:compiler_info".split(), check=True)
@@ -19,7 +19,7 @@ def show_compiler_info() -> None:
         cc = f.read().split(" ", maxsplit=1)[1].strip()
         if cc.startswith("external"):
             cc = "bazel-protobuf-c/" + cc
-        print("---- Compiler info ------------------------------------------------------", flush=True)
+        print("---- Compiler info --------------------------------------------------", flush=True)
         subprocess.run([cc, "--version"], check=True)
 
 
@@ -47,8 +47,8 @@ def test_generate_file() -> None:
     )
     file_replace(
         "t/issue204/issue204.c",
-        "\"t/issue251/issue251.pb-c.h\"",
-        "\"t/issue204/issue204.pb-c.h\"",
+        '"t/issue251/issue251.pb-c.h"',
+        '"t/issue204/issue204.pb-c.h"',
     )
 
     subprocess.run(f"bazel build --config={SYSTEM} //t:gen2".split(), check=True)
@@ -90,6 +90,7 @@ if __name__ == "__main__":
     os.chdir(cwd)
     if SYSTEM == "windows" or SYSTEM == "osx":
         import zipfile
+
         arch = "arm64" if ARCH == "arm64" else "amd64"
         with zipfile.ZipFile(f"protobuf-c-{SYSTEM}-{arch}.zip", "w", zipfile.ZIP_DEFLATED) as zip_f:
             zip_f.write(f"protobuf-c/out/protoc-gen-c{EXT}", f"bin/protoc-gen-c{EXT}")
@@ -97,6 +98,7 @@ if __name__ == "__main__":
             zip_f.write("protobuf-c/protobuf-c/protobuf-c.h", "src/protobuf-c.h")
     elif SYSTEM == "linux":
         import tarfile
+
         with tarfile.open("protobuf-c-linux-amd64.tar.gz", "w:gz") as tar:
             tar.add("protobuf-c/out/protoc-gen-c", arcname="bin/protoc-gen-c")
             tar.add("protobuf-c/protobuf-c/protobuf-c.c", arcname="src/protobuf-c.c")
