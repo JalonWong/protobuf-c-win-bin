@@ -32,15 +32,14 @@ get_protoc = module_extension(
     implementation = _get_protoc_impl,
 )
 
-def _get_protoc_c_impl(ctx):
+def _get_protobuf_c_impl(ctx):
     t = get_tool(ctx, PROTOC_C)
     http_archive(
-        name = "get_protoc_c_",
+        name = "protobuf_c",
         url = t["url"],
         sha256 = t["sha256"],
-        build_file = "//:tools/bin.BUILD",
     )
 
-get_protoc_c = module_extension(
-    implementation = _get_protoc_c_impl,
+get_protobuf_c = module_extension(
+    implementation = _get_protobuf_c_impl,
 )

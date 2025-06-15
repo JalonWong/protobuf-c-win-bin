@@ -6,7 +6,7 @@ cc_library(
     hdrs = ["protobuf-c/protobuf-c.h"],
     includes = ["."],
     defines = select({
-        "@rules_c_proto//:no_std": ["PROTOBUF_C_NO_STD"],
+        "//:no_std": ["PROTOBUF_C_NO_STD"],
         "//conditions:default": [],
     }),
 )
