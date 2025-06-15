@@ -1,5 +1,0 @@
-syntax = "proto3";
-
-package base;
-
-message BaseType { string msg = 1; };

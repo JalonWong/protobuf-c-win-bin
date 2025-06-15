@@ -7,7 +7,8 @@ use_repo(cc_configure, "local_config_cc")
 
 bazel_dep(name = "protobuf", version = "31.1")
 bazel_dep(name = "rules_c_proto")
-local_path_override(
+git_override(
     module_name="rules_c_proto",
-    path="..",
+    remote="https://github.com/JalonWong/rules_c_proto.git",
+    branch="main",
 )
