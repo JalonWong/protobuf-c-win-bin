@@ -5,5 +5,5 @@ get_protoc = use_extension("//tools:extensions.bzl", "get_protoc")
 use_repo(get_protoc, "get_protoc_")
 get_protobuf_c = use_extension("//tools:extensions.bzl", "get_protobuf_c")
 use_repo(get_protobuf_c, "protobuf_c")
-
+bazel_dep(name = "protobuf", version = "31.1")
 bazel_dep(name = "googletest", version = "1.17.0", dev_dependency = True)

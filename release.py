@@ -95,6 +95,7 @@ if __name__ == "__main__":
         arch = "arm64" if ARCH == "arm64" else "amd64"
         with zipfile.ZipFile(f"protobuf-c-{SYSTEM}-{arch}.zip", "w", zipfile.ZIP_DEFLATED) as zip_f:
             zip_f.write(f"protobuf-c/out/protoc-gen-c{EXT}", f"bin/protoc-gen-c{EXT}")
+            zip_f.write("protobuf-c/protobuf-c/protobuf-c.proto", "proto/protobuf-c/protobuf-c.proto")
             files = glob("pack_protobuf_c/**", recursive=True, include_hidden=True)
             for file in files:
                 zip_f.write(file, file[len("pack_protobuf_c/"):])
@@ -103,6 +104,7 @@ if __name__ == "__main__":
 
         with tarfile.open("protobuf-c-linux-amd64.tar.gz", "w:gz") as tar:
             tar.add("protobuf-c/out/protoc-gen-c", "bin/protoc-gen-c")
+            tar.add("protobuf-c/protobuf-c/protobuf-c.proto", "proto/protobuf-c/protobuf-c.proto")
             files = glob("pack_protobuf_c/*")
             for file in files:
                 tar.add(file, file[len("pack_protobuf_c/"):])
