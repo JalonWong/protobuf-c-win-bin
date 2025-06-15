@@ -23,21 +23,21 @@ PROTOC = {
 }
 #----
 PROTOC_C = {
-    "version": "v1.5.2",
+    "version": "v1.5.2.1",
     "linux-amd64": {
-        "url": "https://github.com/JalonWong/protobuf-c-release/releases/download/v1.5.2/protobuf-c-linux-amd64.tar.gz",
-        "sha256": "a8ea983ffc611505b39ae078498d8007916cfd4274efae19a0d4b70750c53d8b"
+        "url": "https://github.com/JalonWong/protobuf-c-release/releases/download/v1.5.2.1/protobuf-c-linux-amd64.tar.gz",
+        "sha256": "80ac6a0dbb88dad143d1fdefec64c2b57e7dcf0d8d023b5d97712a55c21853ad"
     },
     "macos-amd64": {
-        "url": "https://github.com/JalonWong/protobuf-c-release/releases/download/v1.5.2/protobuf-c-osx-amd64.zip",
-        "sha256": "e386e2f5243eb76e9d929a4b9bde0de1996aa1134fc92bb224923f789c5dd4db"
+        "url": "https://github.com/JalonWong/protobuf-c-release/releases/download/v1.5.2.1/protobuf-c-osx-amd64.zip",
+        "sha256": "daca29be73a000384505e9fd3a78bf32768a48b46f1ca285c9221f785da52df2"
     },
     "macos-aarch64": {
-        "url": "https://github.com/JalonWong/protobuf-c-release/releases/download/v1.5.2/protobuf-c-osx-arm64.zip",
-        "sha256": "8f7cee7574fd730e33844fc50574232a9f4b0d85821e2ba86a58dc2c4799dd94"
+        "url": "https://github.com/JalonWong/protobuf-c-release/releases/download/v1.5.2.1/protobuf-c-osx-arm64.zip",
+        "sha256": "6fe56fb789485bbc5e08baaca9a35dc0c03b4837ad780466459db89ccdc9f4f9"
     },
     "windows-amd64": {
-        "url": "https://github.com/JalonWong/protobuf-c-release/releases/download/v1.5.2/protobuf-c-windows-amd64.zip",
-        "sha256": "ae00dac84a86567cc21b365fd44c583e59f496134bacceddc854b75dfeff00ce"
+        "url": "https://github.com/JalonWong/protobuf-c-release/releases/download/v1.5.2.1/protobuf-c-windows-amd64.zip",
+        "sha256": "1d06c09f351519dd1edca73203d55f0bff5c763f68da4c64c826ec50dc899d94"
     }
 }
