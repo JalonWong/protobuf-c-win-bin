@@ -6,3 +6,4 @@
 /bazel-*
 /*.lock
 /commit.txt
+/pack_protobuf_c/bin

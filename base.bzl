@@ -117,7 +117,7 @@ _c_proto_aspect = aspect(
     toolchains = use_cpp_toolchain(),
     attrs = {
         "_c_deps": attr.label_list(
-            default = ["@rules_c_proto//:protobuf_c"],
+            default = ["@protobuf_c//:protobuf_c"],
         ),
         "_protoc": attr.label(
             default = "@get_protoc_//:bin",
@@ -125,7 +125,7 @@ _c_proto_aspect = aspect(
             cfg = "exec",
         ),
         "_plugin": attr.label(
-            default = "@get_protoc_c_//:bin",
+            default = "@protobuf_c//:bin",
             executable = True,
             cfg = "exec",
         ),

@@ -45,5 +45,5 @@ build --define=c_proto_env_protoc=true
 
 If you don't want to use the heap in the std lib with your source code, for example embedded software, use the following.
 ```sh
-build --define=c_proto_no_std=true
+build --define=protobuf_c_no_std=true
 ```

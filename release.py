@@ -71,8 +71,7 @@ if __name__ == "__main__":
     subprocess.run("bazel --version".split(), check=True)
 
     print("---- Copy files ------------------------------------------------------", flush=True)
-    if not os.path.exists("protobuf-c/out"):
-        os.mkdir("protobuf-c/out")
+    os.makedirs("protobuf-c/out", exist_ok=True)
     src = glob("src_copy/**", recursive=True, include_hidden=True)
     for s in src:
         if os.path.isfile(s):
@@ -96,12 +95,14 @@ if __name__ == "__main__":
         arch = "arm64" if ARCH == "arm64" else "amd64"
         with zipfile.ZipFile(f"protobuf-c-{SYSTEM}-{arch}.zip", "w", zipfile.ZIP_DEFLATED) as zip_f:
             zip_f.write(f"protobuf-c/out/protoc-gen-c{EXT}", f"bin/protoc-gen-c{EXT}")
-            zip_f.write("protobuf-c/protobuf-c/protobuf-c.c", "src/protobuf-c.c")
-            zip_f.write("protobuf-c/protobuf-c/protobuf-c.h", "src/protobuf-c.h")
+            files = glob("pack_protobuf_c/**", recursive=True, include_hidden=True)
+            for file in files:
+                zip_f.write(file, file[len("pack_protobuf_c/"):])
     elif SYSTEM == "linux":
         import tarfile
 
         with tarfile.open("protobuf-c-linux-amd64.tar.gz", "w:gz") as tar:
-            tar.add("protobuf-c/out/protoc-gen-c", arcname="bin/protoc-gen-c")
-            tar.add("protobuf-c/protobuf-c/protobuf-c.c", arcname="src/protobuf-c.c")
-            tar.add("protobuf-c/protobuf-c/protobuf-c.h", arcname="src/protobuf-c.h")
+            tar.add("protobuf-c/out/protoc-gen-c", "bin/protoc-gen-c")
+            files = glob("pack_protobuf_c/*")
+            for file in files:
+                tar.add(file, file[len("pack_protobuf_c/"):])
